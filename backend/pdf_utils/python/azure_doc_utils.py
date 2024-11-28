@@ -13,10 +13,13 @@ from nltk.tokenize import sent_tokenize
 
 load_dotenv()
 
-endpoint = os.environ["Azure_Doc_Endpoint"]
-key = os.environ["Azure_Doc_Key"]
+ENDPOINT = os.environ["Azure_Doc_Endpoint"]
+KEY = os.environ["Azure_Doc_Key"]
 
-document_intelligence_client = DocumentIntelligenceClient(endpoint=endpoint, credential=AzureKeyCredential(key))
+if not ENDPOINT or not KEY:
+    raise ValueError("Azure_Doc_Endpoint and Azure_Doc_Key must be set in the environment variables.")
+
+document_intelligence_client = DocumentIntelligenceClient(endpoint=ENDPOINT, credential=AzureKeyCredential(KEY))
 
 def process_document(file_path):
     """Process a single document and return its hierarchy"""
