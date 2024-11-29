@@ -6,7 +6,8 @@ from azure.ai.documentintelligence.models import AnalyzeOutputOption, AnalyzeRes
 from dotenv import load_dotenv
 import json
 import nltk
-
+import fitz
+import tempfile
 # Ensure you have downloaded the punkt tokenizer
 nltk.download('punkt')
 from nltk.tokenize import sent_tokenize
@@ -20,8 +21,9 @@ if not ENDPOINT or not KEY:
     raise ValueError("Azure_Doc_Endpoint and Azure_Doc_Key must be set in the environment variables.")
 
 document_intelligence_client = DocumentIntelligenceClient(endpoint=ENDPOINT, credential=AzureKeyCredential(KEY))
+ 
 
-def process_document(file_path):
+def process_image_document(file_path):
     """Process a single document and return its hierarchy"""
     try:
         with open(file_path, "rb") as f:
@@ -42,7 +44,8 @@ def process_document(file_path):
 
         if result.paragraphs:
             # Sort paragraphs by their span's offset to maintain order
-            sorted_paragraphs = sorted(result.paragraphs, key=lambda p: p.spans[0].offset)
+            sorted_paragraphs = sorted(result.
+            paragraphs, key=lambda p: p.spans[0].offset)
 
             current_section = None
 
@@ -88,7 +91,7 @@ def save_hierarchy_to_json(hierarchy, output_path):
     print(f"Document hierarchy has been saved to {output_path}")
 
 # Example usage:
-# file_path = "sample_documents\2408.07055v1.pdf"
-# hierarchy = process_document(file_path)
-# if hierarchy:
-#    save_hierarchy_to_json(hierarchy, "output.json")
+#file_path = "test-image.png"
+#hierarchy = process_document(file_path)
+#if hierarchy:
+#    save_hierarchy_to_json(hierarchy, os.path.basename(file_path) + ".json")

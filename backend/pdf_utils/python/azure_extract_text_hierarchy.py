@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 import tempfile
 from azure.core.exceptions import HttpResponseError
 
-from azure_doc_utils import process_document, save_hierarchy_to_json
+from azure_doc_utils import process_image_document, save_hierarchy_to_json
 
 app = FastAPI()
 
@@ -45,8 +45,10 @@ async def upload_pdf(file: UploadFile = File(...)):
             temp_file.write(content)
             temp_file.flush()
             temp_path = temp_file.name
-            
-            hierarchy = process_document(temp_path)
+
+            global_hierarchy = []
+            hierarchy = process_image_document(temp_path)
+
             if hierarchy:
                 return hierarchy
 
