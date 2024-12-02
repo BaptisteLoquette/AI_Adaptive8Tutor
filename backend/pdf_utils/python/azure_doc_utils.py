@@ -63,7 +63,7 @@ def process_image_document(file_path):
                 else:
                     if current_section is None: # If no section exists, create a default one
                         current_section = OrderedDict()
-                        current_section['Title'] = "Untitled Section"
+                        current_section['Title'] =  "Untitled Section"
                         current_section['Paragraphs'] = []
                         document_hierarchy['Sections'].append(current_section)
 
@@ -91,7 +91,7 @@ def save_hierarchy_to_json(hierarchy, output_path):
     print(f"Document hierarchy has been saved to {output_path}")
 
 # Example usage:
-#file_path = "test-image.png"
+#file_path = "test-image.pdf"
 #hierarchy = process_document(file_path)
 #if hierarchy:
 #    save_hierarchy_to_json(hierarchy, os.path.basename(file_path) + ".json")
