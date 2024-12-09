@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 import tempfile
 from azure.core.exceptions import HttpResponseError
 
-from azure_doc_utils import process_image_document
+from backend.utils.azure_doc_utils import process_image_document
 
 app = FastAPI()
 
