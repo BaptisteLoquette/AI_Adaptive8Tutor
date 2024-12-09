@@ -47,33 +47,37 @@ def process_image_document(file_path):
             sorted_paragraphs = sorted(result.
             paragraphs, key=lambda p: p.spans[0].offset)
 
+            # Pre-compile the role check set for faster lookups
+            HEADING_ROLES = {'title', 'subtitle', 'heading', 'header'}
+            
+            # Create default section once, outside the loop
+            default_section = OrderedDict([
+                ('Title', 'Untitled Section'),
+                ('Paragraphs', [])
+            ])
             current_section = None
 
             for paragraph in sorted_paragraphs:
                 content = paragraph.content.strip()
                 role = paragraph.role.lower() if paragraph.role else "body"
 
-                # Determine if the paragraph is a Title/Subtitle
-                if role.lower() in ['title', 'subtitle', 'heading', 'header']:
-                    # Start a new section
-                    current_section = OrderedDict()
-                    current_section['Title'] = content
-                    current_section['Paragraphs'] = []
+                if role in HEADING_ROLES:
+                    current_section = OrderedDict([
+                        ('Title', content),
+                        ('Paragraphs', [])
+                    ])
                     document_hierarchy['Sections'].append(current_section)
                 else:
-                    if current_section is None: # If no section exists, create a default one
-                        current_section = OrderedDict()
-                        current_section['Title'] =  "Untitled Section"
-                        current_section['Paragraphs'] = []
+                    # Use default section if none exists
+                    if current_section is None:
+                        current_section = default_section
                         document_hierarchy['Sections'].append(current_section)
 
-                    # Split paragraph into sentences through nltk
-                    sentences = sent_tokenize(content)
-                    paragraph_dict = {
+                    # Create paragraph dict directly without intermediate variables
+                    current_section['Paragraphs'].append({
                         'Paragraph': content,
-                        'Sentences': sentences
-                    }
-                    current_section['Paragraphs'].append(paragraph_dict)
+                        'Sentences': sent_tokenize(content)
+                    })
 
         return document_hierarchy
 

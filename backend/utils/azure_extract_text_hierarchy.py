@@ -25,7 +25,6 @@ frontend_path = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "frontend"
 )
 
-# Mount static files
 app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
 @app.get("/")
